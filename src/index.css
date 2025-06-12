@@ -2,7 +2,6 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
-
 :root {
   --radius: 0.65rem;
   --background: oklch(1 0 0);
@@ -71,7 +70,6 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.541 0.281 293.009);
 }
-
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
