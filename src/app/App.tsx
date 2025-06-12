@@ -8,6 +8,11 @@ import ChatWindow, {
   loader as chatWindowLoader,
 } from "@/components/ChatWindow.tsx";
 import NoChatWindow from "@/components/NoChatWindow.tsx";
+import { useEffect } from "react";
+import { connectWebSocket, disconnectWebSocket } from "@/lib/websocket.ts";
+import { useSelector } from "react-redux";
+import type { UserState } from "@/store/userSlice.ts";
+import type { AllUsers } from "@/store/allUsersSlice.ts";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +52,23 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const user = useSelector(
+    (state: { user: UserState; allUsers: AllUsers }): UserState => state.user,
+  );
+
+  useEffect(() => {
+    if (user) {
+      connectWebSocket(user.userId, (message) => {
+        console.log("Received Message", message);
+        // Optionally store in Redux/Zustand state
+      });
+    }
+
+    return () => {
+      disconnectWebSocket();
+    };
+  }, [user]);
+
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">

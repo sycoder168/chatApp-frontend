@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { UserState } from "@/store/userSlice.ts";
 
-interface AllUsers {
+export interface AllUsers {
   users: UserState[];
 }
 
