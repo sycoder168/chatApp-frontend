@@ -3,16 +3,21 @@ import RootLayout, { loader as rootLoader } from "../pages/RootLayout.tsx";
 import Login from "@/pages/Login.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import Signup from "@/pages/Signup.tsx";
-import Home from "@/pages/Home.tsx";
+import Home, { loader as homeLoader } from "@/pages/Home.tsx";
 import ChatWindow, {
   loader as chatWindowLoader,
 } from "@/components/ChatWindow.tsx";
 import NoChatWindow from "@/components/NoChatWindow.tsx";
 import { useEffect } from "react";
 import { connectWebSocket, disconnectWebSocket } from "@/lib/websocket.ts";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { UserState } from "@/store/userSlice.ts";
 import type { AllUsers } from "@/store/allUsersSlice.ts";
+import {
+  userChatsActions,
+  type Message,
+  type UserChats,
+} from "@/store/userChatsSlice.ts";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +26,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Navigate to={"/signup"} />,
+        element: <Navigate to={"/login"} />,
         loader: rootLoader,
       },
       {
@@ -35,6 +40,7 @@ const router = createBrowserRouter([
       {
         path: "/home",
         element: <Home />,
+        loader: homeLoader,
         children: [
           {
             index: true,
@@ -53,14 +59,21 @@ const router = createBrowserRouter([
 
 function App() {
   const user = useSelector(
-    (state: { user: UserState; allUsers: AllUsers }): UserState => state.user,
+    (state: {
+      user: UserState;
+      allUsers: AllUsers;
+      userChats: UserChats;
+    }): UserState => state.user,
   );
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (user) {
-      connectWebSocket(user.userId, (message) => {
+      connectWebSocket(user.userId, (message: Message) => {
         console.log("Received Message", message);
         // Optionally store in Redux/Zustand state
+        dispatch(userChatsActions.addMessageToChat(message));
       });
     }
 

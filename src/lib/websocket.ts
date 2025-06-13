@@ -1,13 +1,13 @@
 // websocket.ts
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
-import type { MessageType } from "@/types.ts";
+import type { Message } from "@/store/userChatsSlice";
 
 let stompClient: Client | null = null;
 
 export function connectWebSocket(
   userId: number,
-  onMessage: (msg: any) => void,
+  onMessage: (msg: Message) => void,
 ) {
   if (stompClient && stompClient.connected) return;
 
@@ -26,9 +26,19 @@ export function connectWebSocket(
       });
     },
   });
+
+  stompClient.activate();
 }
 
-export function sendMessage(message: MessageType) {
+export interface SendingChatMessageType {
+  chatId: number;
+  senderId: number;
+  receiverId: number;
+  message: string;
+  timestamp: number;
+}
+
+export function sendMessage(message: SendingChatMessageType) {
   if (stompClient && stompClient.connected) {
     stompClient.publish({
       destination: "/app/chat",

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useEffect } from "react";
 import { Command, MessagesSquare, Phone } from "lucide-react";
 
 import { NavUser } from "@/components/nav-user";
@@ -17,11 +16,12 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Switch } from "@/components/ui/switch";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import type { UserState } from "@/store/userSlice.ts";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar.tsx";
-import { fetchAllUsers } from "@/store/allUsersActions.ts";
+// import { fetchAllUsers } from "@/store/allUsersActions.ts";
 import { Link } from "react-router";
+import type { UserChat } from "@/store/userChatsSlice";
 
 // This is sample data
 const data = {
@@ -130,14 +130,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // @ts-expect-error: unknown
   const user: UserState = useSelector((state) => state.user);
 
-  const dispatch = useDispatch();
-  // @ts-expect-error: unknown
-  const users = useSelector((state) => state.allUsers.users);
-
-  useEffect(() => {
+  // const dispatch = useDispatch();
+  // const users = useSelector((state) => state.allUsers.users);
+  const userChats: UserChat[] = useSelector(
     // @ts-expect-error: unknown
-    dispatch(fetchAllUsers());
-  }, [dispatch]);
+    (state) => state.userChats.userChats,
+  );
+
+  // useEffect(() => {
+  //   // @ts-expect-error: unknown
+  //   // dispatch(fetchAllUsers());
+  //   dispatch(fetchUserChats());
+  // }, [dispatch]);
 
   return (
     <Sidebar
@@ -215,20 +219,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarContent>
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
-              {users ? (
-                users.map((user: UserState) => (
+              {userChats ? (
+                userChats.map((userChat: UserChat) => (
                   <Link
-                    to={"/home/chat/" + user.userId}
-                    key={user.userId}
+                    to={"/home/chat/" + userChat.user.userId}
+                    key={userChat.user.userId}
                     className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex flex-col items-start gap-2 border-b p-4 text-sm leading-tight whitespace-nowrap last:border-b-0"
                   >
                     <div className={"flex flex-row gap-2 items-center"}>
                       <Avatar className="h-10 w-10 rounded-3xl">
                         <AvatarFallback className="rounded-lg">
-                          {user.username.charAt(0).toUpperCase()}
+                          {userChat.user.username.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
-                      <p className={""}>{user.username}</p>
+                      <p className={""}>{userChat.user.username}</p>
                     </div>
                   </Link>
                 ))
