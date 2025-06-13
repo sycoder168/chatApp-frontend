@@ -2,9 +2,11 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import store from "@/store";
 import { fetchUserChats } from "@/store/userChatsActions";
-import { Outlet } from "react-router";
+import { Outlet, useLoaderData } from "react-router";
 
 export default function Home() {
+  const userChats = useLoaderData();
+
   return (
     <SidebarProvider
       style={
@@ -13,7 +15,7 @@ export default function Home() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar />
+      <AppSidebar userChats={userChats} />
       <SidebarInset>
         <Outlet />
       </SidebarInset>
@@ -22,6 +24,7 @@ export default function Home() {
 }
 
 export async function loader() {
-  await store.dispatch(fetchUserChats());
+  const userChats = await store.dispatch(fetchUserChats());
+  return userChats;
   // return redirect("/home");
 }

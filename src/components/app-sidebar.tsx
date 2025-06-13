@@ -123,7 +123,11 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps {
+  userChats: UserChat[];
+}
+
+export function AppSidebar({ userChats }: AppSidebarProps) {
   // Note: I'm using state to show active item.
   // IRL you should use the url/router.
   const [activeItem] = React.useState(data.navMain[0]);
@@ -131,11 +135,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user: UserState = useSelector((state) => state.user);
 
   // const dispatch = useDispatch();
-  // const users = useSelector((state) => state.allUsers.users);
-  const userChats: UserChat[] = useSelector(
-    // @ts-expect-error: unknown
-    (state) => state.userChats.userChats,
-  );
+  // const users = useSelector((stsate) => state.allUsers.users);
+  // const userChats: UserChat[] = useSelector(
+  //   // @ts-expect-error: unknown
+  //   (state) => state.userChats.userChats,
+  // );
 
   // useEffect(() => {
   //   // @ts-expect-error: unknown
@@ -147,7 +151,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar
       collapsible="icon"
       className="overflow-hidden *:data-[sidebar=sidebar]:flex-row"
-      {...props}
     >
       {/* This is the first sidebar */}
       {/* We disable collapsible and adjust width to icon. */}

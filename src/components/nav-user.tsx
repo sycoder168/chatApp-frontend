@@ -18,15 +18,18 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import type { UserState } from "@/store/userSlice.ts";
+import { userActions, type UserState } from "@/store/userSlice.ts";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
 
 export function NavUser({ user }: { user: UserState }) {
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
   function handleLogout() {
-    localStorage.removeItem("token");
+    dispatch(userActions.logout());
     navigate("/");
   }
 

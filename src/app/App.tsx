@@ -18,6 +18,7 @@ import {
   type Message,
   type UserChats,
 } from "@/store/userChatsSlice.ts";
+import { loginAction } from "@/components/login-form.tsx";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+        action: loginAction,
       },
       {
         path: "/signup",
@@ -80,7 +82,7 @@ function App() {
     return () => {
       disconnectWebSocket();
     };
-  }, [user]);
+  }, [user, dispatch]);
 
   return (
     <>
