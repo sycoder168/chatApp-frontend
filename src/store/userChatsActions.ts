@@ -1,4 +1,4 @@
-import { userChatsActions, type UserChat } from "@/store/userChatsSlice.ts";
+import { type UserChat, userChatsActions } from "@/store/userChatsSlice.ts";
 import { redirect } from "react-router";
 import { userActions } from "./userSlice";
 
@@ -44,9 +44,8 @@ export function fetchUserChats() {
       }),
     );
 
-    const response = await fetch(
-      `http://localhost:8080/user/chats/${decoded.userId}`,
-    );
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const response = await fetch(`${backendUrl}/user/chats/${decoded.userId}`);
 
     if (!response.ok) {
       return null;

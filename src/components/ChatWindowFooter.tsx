@@ -2,11 +2,15 @@ import { Button } from "@/components/ui/button.tsx";
 import { Paperclip, Send } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { useActionState, useEffect, useRef, useState } from "react";
-import { sendMessage, type SendingChatMessageType } from "@/lib/websocket";
+import { type SendingChatMessageType, sendMessage } from "@/lib/websocket";
 import type { UserState } from "@/store/userSlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { AllUsers } from "@/store/allUsersSlice";
-import type { UserChats } from "@/store/userChatsSlice";
+import {
+  type Message,
+  type UserChats,
+  userChatsActions,
+} from "@/store/userChatsSlice";
 
 interface ChatWindowFooterProps {
   chatId: number | undefined;
@@ -24,6 +28,8 @@ export default function ChatWindowFooter({
     (state: { user: UserState; allUsers: AllUsers; userChats: UserChats }) =>
       state.user,
   );
+
+  const dispatch = useDispatch();
 
   // Automatically resize the textarea to fit content
   useEffect(() => {
@@ -50,7 +56,23 @@ export default function ChatWindowFooter({
       };
       console.log(sendingMessage);
       sendMessage(sendingMessage);
+      const messageToUpdateUI: Message = {
+        messageId: 0,
+        senderId: user.userId,
+        chatId: chatId,
+        content: message,
+        seen: true,
+      };
+      dispatch(userChatsActions.addMessageToChat(messageToUpdateUI));
     }
+
+    // export interface Message {
+    //   messageId: number;
+    //   senderId: number;
+    //   chatId: number;
+    //   content: string;
+    //   seen: boolean;
+    // }
 
     setValue("");
     return {

@@ -238,7 +238,9 @@ export async function loginAction({ request }: { request: Request }) {
   const username = formData.get("username");
   const password = formData.get("password");
 
-  const response = await fetch("http://localhost:8080/auth/login", {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  // const response = await fetch("http://localhost:8080/auth/login", {
+  const response = await fetch(`${backendUrl}/auth/login`, {
     method: "POST",
     body: JSON.stringify({ username, password }),
     headers: { "Content-Type": "application/json" },

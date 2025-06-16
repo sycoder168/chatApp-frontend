@@ -34,7 +34,9 @@ export function SignupForm() {
     if (password.length < 6) {
       errors.push("Password must be at least 6 characters");
     } else {
-      const response = await fetch("http://localhost:8080/auth/signup", {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      // const response = await fetch("http://localhost:8080/auth/signup", {
+      const response = await fetch(`${backendUrl}/auth/signup`, {
         method: "POST",
         body: JSON.stringify({
           username: username,

@@ -10,9 +10,9 @@ export function connectWebSocket(
   onMessage: (msg: Message) => void,
 ) {
   if (stompClient && stompClient.connected) return;
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   stompClient = new Client({
-    webSocketFactory: () => new SockJS("http://localhost:8080/ws"),
+    webSocketFactory: () => new SockJS(`${backendUrl}/ws`),
     reconnectDelay: 2000,
 
     debug: (str) => console.log("[STOMP DEBUG]", str),
